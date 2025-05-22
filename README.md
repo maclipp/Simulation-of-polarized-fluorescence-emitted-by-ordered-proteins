@@ -1,1 +1,1 @@
-# polar_2PF_analysis
+# Theoretical calculations of polarization-sensitive fluorescence emitted by an ordered protein structure
