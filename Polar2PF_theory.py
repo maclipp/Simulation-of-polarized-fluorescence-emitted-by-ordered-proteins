@@ -7,13 +7,12 @@ Created on Fri Jun 26 12:29:18 2020
 import numpy as np
 import matplotlib.pyplot as plt
 import scipy.integrate as integrate
-
-#parameters
 pi=np.pi
 cos=np.cos
 sin=np.sin
 
-#objective collecting parameters calculated basing on the theoretical functions
+
+#objective collecting parameters, calculated basing on the theoretical functions available in repository in file "Fitting model description" 
 K1=2.945
 K2=0.069
 K3=1.016
@@ -22,10 +21,11 @@ K3=1.016
 delta=0.98845 #for excitation wavelength 810nm, for wavelength 750nm, delta=0.99662. Delta is an ellipticity of used dichroic mirror.
 gamma=0.01 #dichroism of dichroic mirror
 
-#parameters depending on the orientation of molecule and fluorophore, based on Fig.1d
-psi=29*pi/180 # Angle between a dye and a fiber (from 0 to 45)
-dpsi=10*pi/180 #Deviation of PSI angle (between dye and  fiber)
-phi=72*pi/180 #Orientation(angle) of a fiber (from 0 to 180)
+#Exemplary parameters depending on the orientation of molecule and fluorophore
+psi=1*pi/180 # Angle between a fluorophore and matrix molecule (from 0 to 180 degrees)
+dpsi=1*pi/180 #Deviation of PSI angle of fluorophore
+phi=10*pi/180 #Orientation(angle) of a matrix (from 0 to 180)
+#all the angles are calculated from the begining of the plus x axis
 
 
 
@@ -86,5 +86,7 @@ Py=fyyyyy(phi)*Ey4+fyxxxx(phi)*Ex4+6*fyxxyy(phi)*Ex2Ey2+4*fyxyyy(phi)*ExEy3+4*fy
 
 plt.figure()
 plt.polar(alph,Px,'-r',alph,Py,'-b')
+plt.title('Px - red line Py - blue line')
+
 
 
