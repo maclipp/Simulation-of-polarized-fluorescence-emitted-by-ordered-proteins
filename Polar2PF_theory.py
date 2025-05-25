@@ -3,7 +3,12 @@
 Created on Fri Jun 26 12:29:18 2020
 
 @author: Maciej Lipok
+To fully understand the code and different parameters used in it please refer to paper:
+M. Lipok et al., Polarization-Sensitive Two-Photon Microscopy for a Label-Free Amyloid Structural Characterization. J. Vis. Exp. (199), e65670 (2023)
+and
+P. Obstarczyk et al., Two-Photon Excited Polarization-Dependent Autofluorescence of Amyloids as a Label-Free Method of Fibril Organization Imaging J. Phys. Chem. Lett. 12, 1432–1437 (2021)
 """
+
 import numpy as np
 import matplotlib.pyplot as plt
 import scipy.integrate as integrate
@@ -12,13 +17,13 @@ cos=np.cos
 sin=np.sin
 
 
-#objective collecting parameters, calculated basing on the theoretical functions available in repository in file "Fitting model description" 
+#microscope objective collecting parameters
 K1=2.945
 K2=0.069
 K3=1.016
 
 #dichroic mirror parameters
-delta=0.98845 #for excitation wavelength 810nm, for wavelength 750nm, delta=0.99662. Delta is an ellipticity of used dichroic mirror.
+delta=0.98845 #for excitation wavelength 810nm, for wavelength 750nm, delta=0.99662. Delta is an ellipticity of dichroic mirror.
 gamma=0.01 #dichroism of dichroic mirror
 
 #Exemplary parameters depending on the orientation of molecule and fluorophore
@@ -28,7 +33,7 @@ phi=10*pi/180 #Orientation(angle) of a matrix (from 0 to 180)
 #all the angles are calculated from the begining of the plus x axis
 
 
-
+#Defining functions used to calculate the polarized fluorescence emitted by fluorophore
 def f(ith,iphi):
     return np.exp(-((ith-psi)/dpsi)**2)/(2*pi*sin(psi)*dpsi*pi**0.5)
 def uax(ith, iphi,phi):
@@ -62,6 +67,7 @@ def fyxxxy(phi):
 def fyxyyy(phi):
     return integrate.dblquad(lambda ith, iphi: JY(ith,iphi,phi)*uax(ith,iphi,phi)*uay(ith,iphi,phi )**3*f(ith,iphi)*sin(ith),0,2*pi,0,pi)[0]
 
+#creating arrays used in calculations
 data_size=180 #size of data column
 m=np.arange(1, data_size)
 l=np.arange(1, data_size)
@@ -73,6 +79,7 @@ ith=2*m*pi/data_size # angle of orientation of a dipole in xy plane
 
 Ex4,Ey4,Ex2Ey2,Ex3Ey,ExEy3=np.arange(1.0, data_size),np.arange(1.0, data_size),np.arange(1.0,data_size),np.arange(1.0, data_size),np.arange(1.0, data_size)
 
+#Calculations
 for x in range(0, data_size-1):
         Ex4[x]=integrate.quad(lambda fi: ((1-gamma)*cos(alph[x])*cos(fi))**4,0,2*pi)[0]
         Ey4[x]=integrate.quad(lambda fi:(sin(alph[x])*cos(fi+delta))**4,0,2*pi)[0]
@@ -83,7 +90,7 @@ for x in range(0, data_size-1):
 Px=fxxxxx(phi)*Ex4+fxyyyy(phi)*Ey4 +6*fxxxyy(phi)*Ex2Ey2+4*fxxxxy(phi)*Ex3Ey+4*fxxyyy(phi)*ExEy3
 Py=fyyyyy(phi)*Ey4+fyxxxx(phi)*Ex4+6*fyxxyy(phi)*Ex2Ey2+4*fyxyyy(phi)*ExEy3+4*fyxxxy(phi)*Ex3Ey
 
-
+#Visualization
 plt.figure()
 plt.polar(alph,Px,'-r',alph,Py,'-b')
 plt.title('Px - red line Py - blue line')
